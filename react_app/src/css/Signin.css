@@ -1,0 +1,97 @@
+/* Sign In Page Styles */
+.signin-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #0d47a1, #1976d2);
+}
+
+.signin-box {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.logo {
+    font-size: 50px;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    background: transparent;
+    border: 1px solid #fff;  /* Đảm bảo cả 2 trường có border giống nhau */
+    padding: 12px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    transition: border 0.3s ease-in-out;  /* Thêm hiệu ứng khi focus */
+}
+
+.input-group .icon {
+    color: white;
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.input-group input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 16px;
+    width: 100%;
+}
+
+.input-group input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Thêm hiệu ứng border khi focus vào input */
+.input-group input:focus {
+    border-color: #fff;  /* Thay đổi màu viền khi focus */
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #0d47a1;
+    background: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.login-btn:hover {
+    background: #f1f1f1;
+}
+
+.forgot-password {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    color: rgba(255, 255, 255, 0.8); /* Màu chữ nhạt hơn một chút */
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+
+.forgot-password:hover {
+    color: white; /* Khi hover, màu sáng lên */
+    text-decoration: underline; /* Gạch chân khi hover */
+}
+input[type="email"]:focus {
+  outline: none;  /* Vô hiệu hóa outline khi focus */
+  border: none;   /* Tắt viền tự động */
+}

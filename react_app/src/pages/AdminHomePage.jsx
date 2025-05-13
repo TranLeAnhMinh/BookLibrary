@@ -1,14 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../componets/Sidebar";
 import AdminHeader from "../componets/AdminHeader";
 import ToTopButton from "../componets/ToTopButton";
+import { getStatisticsSummary } from "../../services/statisticsServices";  // 👈 import API mới
 
 const AdminHomePage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalBooks, setTotalBooks] = useState(0);
 
   const handleToggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      const response = await getStatisticsSummary();
+      if (response.success) {
+        setTotalUsers(response.stats.total_users);
+        setTotalBooks(response.stats.total_books);
+      } else {
+        console.error(response.message);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   return (
     <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
@@ -30,21 +47,19 @@ const AdminHomePage = () => {
           </h2>
         </section>
 
+        {/* Thống kê tổng quát */}
         <section style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
           <div style={{ flex: 1, padding: "20px", background: "#ecf0f1", borderRadius: "8px" }}>
             <h3 style={{ fontSize: "18px", fontWeight: "600" }}>Số lượng người dùng</h3>
-            <p style={{ fontSize: "24px", fontWeight: "700", color: "#2c3e50" }}>1,500</p>
+            <p style={{ fontSize: "24px", fontWeight: "700", color: "#2c3e50" }}>{totalUsers}</p>
           </div>
           <div style={{ flex: 1, padding: "20px", background: "#ecf0f1", borderRadius: "8px" }}>
             <h3 style={{ fontSize: "18px", fontWeight: "600" }}>Số lượng sách</h3>
-            <p style={{ fontSize: "24px", fontWeight: "700", color: "#2c3e50" }}>200</p>
+            <p style={{ fontSize: "24px", fontWeight: "700", color: "#2c3e50" }}>{totalBooks}</p>
           </div>
         </section>
 
-        <section>
-          <h2 style={{ fontSize: "20px", fontWeight: "600" }}>Danh mục sách</h2>
-          {/* Có thể thêm một bảng danh sách hoặc thêm biểu đồ ở đây */}
-        </section>
+      
       </main>
       <ToTopButton />
     </div>

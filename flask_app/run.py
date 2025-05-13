@@ -18,6 +18,8 @@ from views.author_views import author_blueprint
 from views.publisher_views import publisher_blueprint
 from views.image_upload_views import image_upload_bp
 from views.review_views import review_blueprint
+from views.statistics_views import statistics_blueprint
+
 app = Flask(__name__)
 CORS(app)
 
@@ -35,6 +37,7 @@ app.register_blueprint(author_blueprint, url_prefix="/api")
 app.register_blueprint(publisher_blueprint, url_prefix="/api")
 app.register_blueprint(image_upload_bp)
 app.register_blueprint(review_blueprint, url_prefix="/api")
+app.register_blueprint(statistics_blueprint, url_prefix="/api")
 
 
 

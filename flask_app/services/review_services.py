@@ -57,3 +57,95 @@ class ReviewService:
             mysql.connection.rollback()  # Rollback nếu có lỗi
             cursor.close()
             return jsonify({"success": False, "message": f"Lỗi: {str(e)}"}), 500
+
+    @staticmethod
+    def get_all_reviews_with_details():
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        query = """
+            SELECT 
+                reviews.id AS review_id,
+                reviews.comment,
+                reviews.star,
+                reviews.status,
+                reviews.created_at AS review_created_at,
+                reviews.updated_at AS review_updated_at,
+                users.full_name AS user_full_name,
+                users.email AS user_email,
+                books.title AS book_title,
+                books.slug AS book_slug
+            FROM reviews
+            JOIN users ON reviews.user_id = users.id
+            JOIN books ON reviews.book_id = books.id
+            WHERE reviews.deleted_at IS NULL
+            ORDER BY reviews.created_at DESC
+        """
+        cursor.execute(query)
+        reviews = cursor.fetchall()
+        cursor.close()
+        return jsonify({"success": True, "reviews": reviews}), 200
+    
+    # Sửa trạng thái của đánh giá
+    @staticmethod
+    def update_review_status(review_id, new_status):
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        query = """
+            UPDATE reviews 
+            SET status = %s, updated_at = CURRENT_TIMESTAMP
+            WHERE id = %s AND deleted_at IS NULL
+        """
+        try:
+            cursor.execute(query, (new_status, review_id))
+            mysql.connection.commit()  # Lưu thay đổi vào database
+            cursor.close()
+            return jsonify({"success": True, "message": "Trạng thái đánh giá đã được cập nhật!"}), 200
+        except Exception as e:
+            mysql.connection.rollback()  # Rollback nếu có lỗi
+            cursor.close()
+            return jsonify({"success": False, "message": f"Lỗi: {str(e)}"}), 500
+    
+    # Xóa đánh giá (chỉ đánh dấu xóa)
+    @staticmethod
+    def delete_review(review_id):
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        query = """
+            UPDATE reviews 
+            SET deleted_at = CURRENT_TIMESTAMP 
+            WHERE id = %s AND deleted_at IS NULL
+        """
+        try:
+            cursor.execute(query, (review_id,))
+            mysql.connection.commit()  # Lưu thay đổi vào database
+            cursor.close()
+            return jsonify({"success": True, "message": "Đánh giá đã được xóa!"}), 200
+        except Exception as e:
+            mysql.connection.rollback()  # Rollback nếu có lỗi
+            cursor.close()
+            return jsonify({"success": False, "message": f"Lỗi: {str(e)}"}), 500
+        
+    @staticmethod
+    def search_reviews(search_query):
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        query = """
+            SELECT 
+                reviews.id AS review_id,
+                reviews.comment,
+                reviews.star,
+                reviews.status,
+                reviews.created_at AS review_created_at,
+                reviews.updated_at AS review_updated_at,
+                users.full_name AS user_full_name,
+                users.email AS user_email,
+                books.title AS book_title,
+                books.slug AS book_slug
+            FROM reviews
+            JOIN users ON reviews.user_id = users.id
+            JOIN books ON reviews.book_id = books.id
+            WHERE reviews.deleted_at IS NULL
+            AND (reviews.comment LIKE %s OR users.full_name LIKE %s OR books.title LIKE %s)
+            ORDER BY reviews.created_at DESC
+        """
+        like_query = f"%{search_query}%"
+        cursor.execute(query, (like_query, like_query, like_query))
+        reviews = cursor.fetchall()
+        cursor.close()
+        return jsonify({"success": True, "reviews": reviews}), 200

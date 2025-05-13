@@ -2,19 +2,61 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../componets/Sidebar";
 import AdminHeader from "../componets/AdminHeader";
 import ToTopButton from "../componets/ToTopButton";
-import "../css/ReviewPage.css"
+import "../css/ReviewPage.css";
+import { getAllReviewsWithDetails, searchReviews, updateReviewStatus, deleteReview } from "../../services/reviewservices";
+
 const ReviewPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [reviews, setReviews] = useState([]);
   const [searchText, setSearchText] = useState("");
 
+  const loadReviews = async () => {
+    const response = await getAllReviewsWithDetails();
+    if (response.success) {
+      setReviews(response.reviews);
+    } else {
+      console.error(response.message);
+    }
+  };
 
-  // Dữ liệu mẫu giả định cho reviews
-  const mockReviews = [
-    { id: 1, user_full_name: "Nguyễn Văn A", book_id: "Book 1", star: 5, comment: "Sách rất hay!", status: 1 },
-    { id: 2, user_full_name: "Trần Thị B", book_id: "Book 2", star: 4, comment: "Nội dung ổn, nhưng cách kể hơi chậm.", status: 0 },
-    { id: 3, user_full_name: "Lê Minh C", book_id: "Book 3", star: 3, comment: "Không hấp dẫn như tôi nghĩ.", status: 1 },
-  ];
+  const handleSearch = async () => {
+    const response = await searchReviews(searchText);
+    if (response.success) {
+      setReviews(response.reviews);
+    } else {
+      console.error(response.message);
+    }
+  };
+
+  const handleChangeStatus = async (reviewId, newStatus) => {
+    const response = await updateReviewStatus(reviewId, newStatus);
+    if (response.success) {
+      alert("Trạng thái đã được cập nhật thành công!");
+      loadReviews();
+    } else {
+      console.error(response.message);
+    }
+  };
+
+  const handleDelete = async (reviewId) => {
+    if (reviewId) {
+      if (window.confirm("Bạn có chắc chắn muốn xóa đánh giá này?")) {
+        const response = await deleteReview(reviewId);
+        if (response.success) {
+          alert("Đánh giá đã được xóa thành công!");
+          loadReviews();
+        } else {
+          console.error(response.message);
+        }
+      }
+    } else {
+      console.error("Invalid review ID");
+    }
+  };
+
+  useEffect(() => {
+    loadReviews();
+  }, []);
 
   const buttonStyle = {
     padding: "8px 16px",
@@ -49,37 +91,6 @@ const ReviewPage = () => {
     backgroundColor: "#f8f9fa",
     fontWeight: "600",
   };
-
-  // Giả lập tải đánh giá từ API
-  const loadReviews = () => {
-    setReviews(mockReviews);
-  };
-
-  // Gọi API tìm kiếm
-  const handleSearch = () => {
-    if (searchText.trim()) {
-      const filteredReviews = mockReviews.filter(
-        (review) =>
-          review.user_full_name.toLowerCase().includes(searchText.toLowerCase()) ||
-          review.status.toString() === searchText
-      );
-      setReviews(filteredReviews);
-    } else {
-      loadReviews();
-    }
-  };
-
-  // Chuyển đổi trạng thái của đánh giá
-  const handleChangeStatus = (reviewId, newStatus) => {
-    const updatedReviews = reviews.map((review) =>
-      review.id === reviewId ? { ...review, status: newStatus } : review
-    );
-    setReviews(updatedReviews);
-  };
-
-  useEffect(() => {
-    loadReviews();
-  }, []);
 
   return (
     <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
@@ -127,33 +138,46 @@ const ReviewPage = () => {
               </tr>
             </thead>
             <tbody>
-              {reviews.length > 0 ? (
-                reviews.map((review) => (
-                  <tr key={review.id}>
-                    <td style={thTdStyle}>{review.id}</td>
-                    <td style={thTdStyle}>{review.user_full_name}</td>
-                    <td style={thTdStyle}>{review.book_id}</td>
-                    <td style={thTdStyle}>{review.star}</td>
-                    <td style={thTdStyle}>{review.comment}</td>
-                    <td style={thTdStyle}>
-                      <select
-                        className="select-status" // Áp dụng lớp CSS cho dropdown
-                        value={review.status}
-                        onChange={(e) => handleChangeStatus(review.id, Number(e.target.value))}
-                        disabled={review.status === 2} // Nếu trạng thái là "Rejected", không thể thay đổi
+              {reviews.length > 0 ? reviews.map((review, index) => (
+                <tr key={review.review_id || index}>
+                  <td style={thTdStyle}>{index + 1}</td>
+                  <td style={thTdStyle}>{review.user_full_name}</td>
+                  <td style={thTdStyle}>{review.book_title}</td>
+                  <td style={thTdStyle}>{review.star}</td>
+                  <td style={thTdStyle}>{review.comment}</td>
+                  <td style={thTdStyle}>
+                    <select
+                      className="select-status"
+                      value={review.status}
+                      onChange={(e) => handleChangeStatus(review.review_id, Number(e.target.value))}
+                      style={{
+                        backgroundColor:
+                          review.status === 0 ? "#f1c40f" :
+                          review.status === 1 ? "#2ecc71" :
+                          "#e74c3c",
+                        color: "white",
+                        padding: "6px",
+                        borderRadius: "4px",
+                      }}
+                    >
+                      <option value="0">Pending</option>
+                      <option value="1">Approved</option>
+                      <option value="2">Rejected</option>
+                    </select>
+                  </td>
+                  <td style={thTdStyle}>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '5px' }}>
+                      <button
+                        className="delete-btn"
+                        style={deleteButtonStyle}
+                        onClick={() => handleDelete(review.review_id)}
                       >
-                        <option value="0">Pending</option>
-                        <option value="1">Approved</option>
-                        <option value="2" disabled>Rejected</option>
-                      </select>
-                    </td>
-                    <td style={thTdStyle}>
-                      <button style={buttonStyle}>Sửa</button>
-                      <button style={deleteButtonStyle}>Xóa</button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
+                        Xóa
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              )) : (
                 <tr>
                   <td colSpan="7" style={thTdStyle}>Không có dữ liệu</td>
                 </tr>
@@ -162,8 +186,6 @@ const ReviewPage = () => {
           </table>
         </section>
       </main>
-
-      {/* Nút về đầu trang */}
       <ToTopButton />
     </div>
   );

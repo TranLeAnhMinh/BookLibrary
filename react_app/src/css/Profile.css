@@ -1,0 +1,104 @@
+/* Căn giữa form theo chiều rộng và chiều cao */
+.profile-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
+/* Form lớn hơn và cân đối */
+.profile-card {
+  width: 100%;
+  max-width: 800px;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề form */
+.profile-title {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Chia form thành 2 cột */
+.profile-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;  /* Cho phép các phần tử tràn xuống khi có quá nhiều */
+  margin-bottom: 15px;
+}
+
+/* Input và select cùng kích thước */
+.profile-input,
+.profile-select {
+  flex: 1 1 48%;  /* Điều chỉnh cho các ô input/select có độ rộng 48%, tạo khoảng cách */
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #f9f9f9;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Hiệu ứng hover khi focus vào input/select */
+.profile-input:focus,
+.profile-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+  background: white;
+}
+
+/* Cải thiện giao diện nút bấm */
+.profile-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.cancel-button,
+.save-button {
+  width: 48%;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+}
+
+/* Màu nút Cancel */
+.cancel-button {
+  background-color: #6c757d;
+  color: white;
+}
+
+.cancel-button:hover {
+  background-color: #545b62;
+}
+
+/* Màu nút Save */
+.save-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.save-button:hover {
+  background-color: #0056b3;
+}
+
+/* Cải thiện độ rộng của input/select trên các màn hình nhỏ */
+@media (max-width: 768px) {
+  .profile-input,
+  .profile-select {
+    flex: 1 1 100%;  /* Trên màn hình nhỏ, các ô sẽ chiếm 100% chiều rộng */
+  }
+}

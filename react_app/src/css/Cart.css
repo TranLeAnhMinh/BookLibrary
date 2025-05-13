@@ -1,0 +1,176 @@
+/* Căn giữa nội dung */
+.cart-container {
+    width: 90%;
+    margin: auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Tiêu đề */
+.cart-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Hiển thị danh sách theo hàng ngang */
+.cart-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding-bottom: 10px;
+}
+
+/* Item trong giỏ hàng */
+.cart-item {
+    position: relative;
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 200px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hiệu ứng hover */
+.cart-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Ảnh sách */
+.cart-thumbnail {
+    width: 150px;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Thông tin sách */
+.cart-info {
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Tên sách */
+.cart-book-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+/* Điều chỉnh input */
+.cart-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.cart-controls label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+}
+
+/* Input */
+.cart-controls input {
+    width: 90px;
+    padding: 6px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+/* Input date */
+.cart-controls input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Input focus */
+.cart-controls input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    outline: none;
+}
+
+/* Các nút hành động */
+.cart-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 12px;
+}
+
+.cart-button {
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s;
+}
+
+/* Nút Update Cart */
+.cart-button.update {
+    background-color: #ffc107;
+    color: black;
+}
+
+.cart-button.update:hover {
+    background-color: #e0a800;
+}
+
+/* Nút Request Loan */
+.cart-button.request {
+    background-color: #007bff;
+    color: white;
+}
+
+.cart-button.request:hover {
+    background-color: #0056b3;
+}
+
+/* Nút X (xóa sách khỏi giỏ hàng) */
+.remove-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.25s ease-in-out;
+    z-index: 1;
+}
+
+.remove-btn:hover {
+    background-color: #f44336;
+    color: white;
+    border-color: transparent;
+}
